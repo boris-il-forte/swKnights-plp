@@ -20,14 +20,14 @@
       (list a b c d e)))
   
 ;) deep-first loop
-(define (deep-first n)  
+(define (depth-first n)  
     (for-each (λ (x)
                 (when (eq? (node-color x) 'white)
                   (begin
                     (display (node-name x))
                     (newline)
                     (set-node-color! x 'black)
-                    (deep-first x))))
+                    (depth-first x))))
               (node-sons n)))
 
 ;) breadth-first loop
@@ -45,14 +45,14 @@
 (define (breadth-first-search g)
   (breadth-first (list (car g))))
 
-;) Deep first algorithm
-(define (deep-first-search g)
+;) Depth first algorithm
+(define (depth-first-search g)
   (set-node-color! (car g) 'black)
   (display (node-name (car g)))
   (newline)
-  (deep-first (car g)))
+  (depth-first (car g)))
 
-;(deep-first-search graph1)
+;(depth-first-search graph1)
 (breadth-first-search graph1)
 
   
