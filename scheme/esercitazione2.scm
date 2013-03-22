@@ -58,18 +58,15 @@
               (+ res 1)
               (car stack)))))
 
-; A variant of count-nodes. Simpler than the one done
+; TODO NOTICE ABOUT COUNT-NODES
+; See the files 1_count-nodes.scm and 2_count-nodes-edited.scm. 
+; The first is a variant, simpler than the one done
 ; during the lecture: does anyone see any flaw in it?
 ; (i tested the two procedures with some values and they seem
 ; to give the same result)
 ; Basically, it uses the stack frame instead of having an explicit stack
-; TODO I'm waiting for comments on this stuff =)
-(define (my-count-nodes l)
-  (cond
-    ([null? l] 0)
-    ([list? (car l)]
-          (+ (my-count-nodes (car l)) (my-count-nodes (cdr l))))
-    (else (+ 1 (my-count-nodes (cdr l))))))
+; The second is the same seen during the lecture, but I slightly 
+; edited it to work around a tiny bug I and Dave found out =)
 
 ;O insieme potenza
 
