@@ -1,0 +1,6 @@
+h1. swKnights - PLP
+
+This is a repository held together by some random students of the Principles of Programming Languages Course @ PoliMi, to share some exercises and code snippets written in the most exotic programming language you may think about :)
+
+bq. se volete aver accesso al repo, contattate uno qualsiasi degli swKnights, e, se siete abbastanza nerd, avrete l'accesso...
+
