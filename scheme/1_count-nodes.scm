@@ -24,9 +24,16 @@
 
 (define (count-nodes-tree l)
   (cond 
-     ([null? l] 0)
+     ([null? l] 0) ; questo in realta' e' inutile [serve solo se si passa la lista vuota come argomento...]
      ([list? l] (foldl + 1 (map count-nodes-tree (cdr l))))
      (else 1)))
+
+; senza considerare il caso "lista vuota"...
+
+(define (count-nodes-tree-v2 l)
+  (if (list? l) 
+      (foldl + 1 (map count-nodes-tree-v2 (cdr l)))
+      1))
 
 ; Valori di test
 
