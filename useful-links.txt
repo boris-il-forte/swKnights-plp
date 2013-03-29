@@ -1,0 +1,3 @@
+
+About macros in Scheme:
+* http://www.shido.info/lisp/scheme_syntax_e.html
