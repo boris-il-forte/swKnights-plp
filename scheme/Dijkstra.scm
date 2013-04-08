@@ -49,32 +49,33 @@
       (list path-cost parent (set-add explored s)))))
 
 
-;) Find the nearest node
-;(define (find-minimum current path-cost)
-  ;(for-each (λ (x) )
-              ;(node-sons current))
+;) Update the cost of the sons
+(define (update-cost current path-cost)
+  (let* ([current-name (node-name current)]
+         [current-cost (hash-ref path-cost current-name)])
+    (for-each (λ (x) 
+                (hash-set! path-cost ;)  the cost hash table
+                           (node-name (car x)) ;) the name of the node
+                           (min (+ current-cost (cdr x)) 
+                                (hash-ref path-cost (car x))))) ;) the updated cost of the arc
+              (node-sons current))))
+                    
   
   
 
 ;) Dijkstra Algorithm
-;(define (dijkstra g s)
-  ;(let* ((init (initialize g s))
-         ;(path-cost (car init))
-         ;(parent (cadr init))
-         ;(explored (caddr init))
-         ;(N (length g)))
-    ;(let ((current s))
-      ;(while-not (= (set-count explored) N)
-                 ;(update-data parent path-cost current)
-                 ;(set! current
-                       ;(let ((tmp (find-minimum current path-cost)))
-                         ;(begin
-                           ;(hash-set! parent tmp current)
-                           ;tmp)))
-                 ;(set! explored (set-add explored))))))
+(define (dijkstra g s)
+  (let* ((init (initialize g s))
+         (path-cost (car init))
+         (parent (cadr init))
+         (explored (caddr init))
+         (N (length g)))
+    (let ((current s))
+      (while-not (= (set-count explored) N)             
+                 
         
     
 ;) test the algorithm
-;(dijkstra graph1 (car graph1))       
+(dijkstra graph1 (car graph1))       
     
     
