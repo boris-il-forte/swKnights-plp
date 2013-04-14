@@ -79,8 +79,14 @@
     (let ([current s]
           [queue (initialize-queue g path-cost)])
       (while-not (= (heap-count queue) 0)
+                 ;( debug code
                  (display (node-name (heap-min queue)))
+                 (display " ")
+                 (display (hash-ref path-cost (node-name (heap-min queue))))
+                 (display " ")
+                 (display (hash-ref parent (node-name (heap-min queue))))
                  (newline)
+                 ;( debug end
                  (update-cost current path-cost parent)
                  (set! current (heap-min queue))
                  (heap-remove-min! queue)))))
