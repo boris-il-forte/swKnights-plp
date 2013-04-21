@@ -44,10 +44,9 @@
     (let ((heap-size (vector-length heap)))
       (let label ((i heap-size))
         (set! heap-size (- heap-size 1))
-        (max-heapify! 
-         (vector-exchange! heap 0 (- i 1))
-         heap-size
-         1)
+        (max-heapify! (vector-exchange! heap 0 (- i 1))
+                      heap-size
+                      1)
       (when (> i 1)
         (label (- i 1)))))))
 
