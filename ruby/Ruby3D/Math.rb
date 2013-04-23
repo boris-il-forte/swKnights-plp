@@ -9,8 +9,7 @@ module Math
 		end
 
 		def solve
-			x = (@b / @A)
-			puts x
+			x = @b * @A.inverse
 			x.row(0)
 		end
 	end
