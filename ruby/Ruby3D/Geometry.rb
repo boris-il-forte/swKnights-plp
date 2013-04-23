@@ -62,19 +62,19 @@ module Geometry
 		end
 
 		def belongs(point)
-			
+
 			#uses the parametric form of the line of the segment to check  the property
 			u1 = (point.x - a.x) / (b.x - a.x)
 			u2 = (point.y - a.y) / (b.y - a.y)
 			u3 = (point.z - a.z) / (b.z - a.z)
-			
+
 			u1 == u2 && u2 == u3 && u1 > 0 && u1 < 1
 		end
 
 		def intersection(segment)
 			#the extremes of the firs segment
 			a, b = @a, @b
-			
+
 			#the extremes of the second segment
 			aa, bb = segment.a, segment.b
 
@@ -118,9 +118,21 @@ module Geometry
 			@a * point.x + @b * point.y + @c * point.z + d == 0
 		end
 
-		#TODO rifinire! fa schifissimo!
 		def to_s
-			"#{@a}x + #{@b}y + #{@c}z + #{@d} = 0"
+			vars = [@a, @b, @c, @d]
+			letters = ["x", "y", "z"]
+			string = ""
+			for i in 0..(vars.length - 1) do
+				if vars[i] > 0 then
+					string = string + " + " unless string.empty?
+					string = string + "#{vars[i]}"
+				elsif vars[i] < 0
+					string = string + " - #{-vars[i]}"
+				end
+				string = string + letters[i] unless letters[i] == nil || vars[i] == 0
+			end
+
+			string + " = 0"
 		end
 
 	end
