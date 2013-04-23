@@ -5,12 +5,12 @@ module Math
 	class LinearSystem
 		def initialize(a, b)
 			@A = Matrix.rows(a)
-			@b = Matrix.row_vector(b)	
+			@b = Matrix.column_vector(b)	
 		end
 
 		def solve
-			x = @b * @A.inverse
-			x.row(0)
+			x = @A.inverse * @b
+			x.column(0)
 		end
 	end
 
