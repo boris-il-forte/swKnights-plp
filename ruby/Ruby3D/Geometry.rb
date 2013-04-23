@@ -72,14 +72,16 @@ module Geometry
 		end
 
 		def intersection(segment)
+			#the extremes of the firs segment
+			a, b = @a, @b
+			
 			#the extremes of the second segment
-			aa = segment.a
-			bb = segment.b
+			aa, bb = segment.a, segment.b
 
 			#the linear system that solves the intersection of the two lines (in parametric form)
-			b = [aa.x - a.x, aa.y - a.y, aa.z - a.z]
+			bVector = [aa.x - a.x, aa.y - a.y, aa.z - a.z]
 			aMatrix = [[aa.x - bb.x, b.x - a.x], [aa.y - bb.y, b.y - a.y], [aa.z - bb.z, b.z - a.z]]
-			system = Math::LinearSystem.new(aMatrix, b)
+			system = Math::LinearSystem.new(aMatrix, bVector)
 			r = system.solve
 
 			#the coefficents parameters
