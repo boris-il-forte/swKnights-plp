@@ -21,15 +21,17 @@ module Controller
       return @@instance
     end
     
-    private_class_method :new#, :min, :max, :utilityFunction, :win, :lost #per avere un singleton
+    private_class_method :new #per avere un singleton
+    
     
     
     def minMax(node)
       hash = { }
       value = []
       
-      for child in node.getChild(1) ##max è il primo che gioca
+      for child in node.getChild(@player) ##max è il primo che gioca
 	utility = min_value(child)
+	puts utility
 	hash[utility] = child
 	value << utility
       end
@@ -40,7 +42,7 @@ module Controller
     end
     
     def max_vector(vector)
-      
+     
       max = vector[0]
       for i in 0..vector.length-1
 	if vector[i] > max
@@ -53,10 +55,11 @@ module Controller
     
     
     def max_value(state)
+      puts "ciao"
       return utilityFunction(state) if terminalState(state)
       
-      u = -1
-      for child in state.getChild(1)
+      u = -@player
+      for child in state.getChild(@player)
 	u = max(u, min_value(child))
       end
       return u
@@ -66,8 +69,8 @@ module Controller
     
       return utilityFunction(state) if terminalState(state)
       
-      u = 1
-      for child in state.getChild(-1)
+      u = @player
+      for child in state.getChild(-@player)
 	u = min(u, max_value(child))
       end
       return u
@@ -226,21 +229,86 @@ module Controller
       end
     end
     
+    private :min, :max, :fullState, :utilityFunction, :max_value, :min_value, :max_vector
+    
   end
   
-  t = Model::TrisMatrixState.new()
-  
-  
- 
- 
-  c = Reasoner.instance
- 
-  
- for i in 0..2
-   for j in 0..2
-    print c.minMax(t).table[i][j]
+  class GameHandler
+    
+    PLAYER = -1
+    COMPUTER = 1
+    
+    def initialize
+      
     end
-    print "\n"
+    
+    def playGame
+    
+      m = Model::TrisMatrixState.new()
+      r = Reasoner.instance
+      
+      begin
+	printTable(m)
+	
+	puts "inserisci la riga (0, 1 o 2): " 
+	rowPlayed = gets.chomp
+
+	puts "inserisci la colonna (0, 1 o 2): " 
+	columnPlayed = gets.chomp
+	
+	
+	
+	
+	begin 
+	 puts "qua ci sono"
+	  m.insert(0, 0, 0)
+	  puts "qua ci sono"
+	rescue Model::InvalidMove => exeption
+	  puts exeption.message
+	  puts "game will now end :("
+	  return
+	end
+	print "prima del min max"
+	#m = r.minMax(m) #gioca il computer
+	
+      end while true
+      
+    end
+    
+    def printTable(trisState)
+      for i in 0..2
+	for j in 0..2
+	  print "| " 
+	  if trisState.table[i][j] == 1
+	    print "X"
+	  elsif trisState.table[i][j] == -1
+	    print "O"
+	  else
+	    print " "
+	  end
+	  print "|" if j == 2
+	end
+	print "\n\n"
+      end
+    end
+    
+   
+  end
+   #g= GameHandler.new()
+   #g.playGame
+  
+  
+  
+#  -----DEBUG------
+  
+   t = Model::TrisMatrixState.new()
+   c = Reasoner.instance
+  
+  for i in 0..2
+    for j in 0..2
+     print c.minMax(t).table[i][j]
+     end
+     print "\n"
   end
 end
 
