@@ -30,6 +30,8 @@ module Controller
       
       for child in node.getChild(1) ##max è il primo che gioca
 	utility = min_value(child)
+	print utility
+	print "\n"
 	hash[utility] = child
 	value << utility
       end
@@ -113,7 +115,7 @@ module Controller
       for j in 0..2
 	count = 0
 	for i in 0..2
-	  if state.table[i][j] == 1
+	  if state.table[i][j] == 1 #controlla qua che da errore!
 	    count = count + 1
 	  end
 	end
@@ -121,9 +123,10 @@ module Controller
       
       return true if count == 3 #abbiamo vinto!
       
-      count = 0
+      
       #controllo le righe
       for i in 0..2
+	count = 0
 	for j in 0..2
 	  if state.table[i][j] == 1
 	    count = count + 1
@@ -159,6 +162,7 @@ module Controller
     #uno stato è di sconfitta nel caso ci sia almeno una sequenza di tre meno-uno di fila nella matrice
     def lost(state)
     
+     
       #controllo le colonne
       for j in 0..2
 	count = 0
@@ -223,19 +227,23 @@ module Controller
   end
   
   t = Model::TrisMatrixState.new()
-  t.insert(2,2,1)
-  t.insert(1,2,-1)
+  
   
  
  
   c = Reasoner.instance
+  print c.utilityFunction(t)
   
-  for i in 0..2
-    for j in 0..2
-      print c.minMax(t).table[i][j]
-    end
-    print "\n"
-  end
+ print "\n"
+ 
+ print c.win(c)
+  
+ # for i in 0..2
+   # for j in 0..2
+    #  print c.minMax(t).table[i][j]
+    #end
+    #print "\n"
+  #end*/
 end
 
   

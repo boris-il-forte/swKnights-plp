@@ -9,9 +9,9 @@ module Model
     attr_accessor :minMaxGain
     
     def initialize()
-      @table = [[0, 0, 0], 
-                [0, 0, 0], 
-                [0, 0, 0]]
+      @table = [[1, 1, 1], 
+                [-1, 1, 1], 
+                [1, 1, -1]]
       
       @minMaxGain = 0
     end
