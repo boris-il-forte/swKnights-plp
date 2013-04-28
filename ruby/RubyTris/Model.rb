@@ -5,13 +5,49 @@ module Model
     
     attr_reader :table
     
+    #può valere:1, 0 o -1 a seconda di vittoria, pareggio o sconfitta
+    attr_accessor :minMaxGain
+    
     def initialize()
       @table = [[0, 0, 0], 
                 [0, 0, 0], 
                 [0, 0, 0]]
+      
+      @minMaxGain = 0
     end
     
-    #Inserisce la nella posizione selezionata in base a chi è il giocatore
+    #espande lo stato corrente
+    def getChild(player)
+      copyState = self.copy
+      children = [] #conterrà tutti i nodi figli 
+      
+      for i in 0..2
+	for j in 0..2
+	  begin 
+	   copyState.insert(i, j, player)
+	   children << copyState
+	   copyState = self.copy
+	  rescue InvalidMove => exception
+	  end
+	end
+      end
+      
+      children
+    end
+    
+    def copy
+      copy = TrisMatrixState.new
+      copy.minMaxGain = @minMaxGain
+      
+      for i in 0..2
+	for j in 0..2
+	  copy.table[i][j] = @table[i][j]
+	end
+      end
+      copy
+    end
+    
+    #Inserisce la nella posizione selezionata in base a chi è il giocatore #lancia eccezione se cella occupata
     def insert(row, column, player)
       
       if table[row][column] == 0
@@ -24,6 +60,7 @@ module Model
     
   end
   
+  #definisco un'eccezione per gestire il caso di mossa non valida
   class InvalidMove < Exception 
     
     attr_reader :message
@@ -36,20 +73,11 @@ module Model
   
   #Da qui in poi è tutto debug per capire un po' il linguaggio
   
-  t = TrisMatrixState.new()
   
-  t.insert(2, 2, 1)
   
-  #inizio a gestire l'eccezione in caso si verifichi
-  #begin
-    t.insert(2, 2, 1)
-  #rescue InvalidMove => details
-   #   print details.message
-  #end
-    
+
+
   
-  print t.table[2][2]
-  print "\n"
   
 end
     
