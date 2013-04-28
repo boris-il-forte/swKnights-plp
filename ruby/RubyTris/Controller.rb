@@ -30,8 +30,6 @@ module Controller
       
       for child in node.getChild(1) ##max è il primo che gioca
 	utility = min_value(child)
-	print utility
-	print "\n"
 	hash[utility] = child
 	value << utility
       end
@@ -119,9 +117,10 @@ module Controller
 	    count = count + 1
 	  end
 	end
+	return true if count == 3 #abbiamo vinto!
       end
       
-      return true if count == 3 #abbiamo vinto!
+      
       
       
       #controllo le righe
@@ -132,10 +131,11 @@ module Controller
 	    count = count + 1
 	  end
 	end
+	return true if count == 3 #abbiamo vinto!
       end
      
       
-      return true if count == 3 #abbiamo vinto!
+      
       
       count = 0
       #controllo le diagonali
@@ -171,9 +171,10 @@ module Controller
 	    count = count + 1
 	  end
 	end
+	return true if count == 3 #abbiamo vinto!
       end
       
-      return true if count == 3 #abbiamo vinto!
+      
       
       count = 0
       #controllo le righe
@@ -184,9 +185,10 @@ module Controller
 	    count = count + 1
 	  end
 	end
+	return true if count == 3 #abbiamo vinto!
       end
       
-      return true if count == 3 #abbiamo vinto!
+      
       
       count = 0
       #controllo le diagonali
@@ -232,18 +234,14 @@ module Controller
  
  
   c = Reasoner.instance
-  print c.utilityFunction(t)
-  
- print "\n"
  
- print c.win(c)
   
- # for i in 0..2
-   # for j in 0..2
-    #  print c.minMax(t).table[i][j]
-    #end
-    #print "\n"
-  #end*/
+ for i in 0..2
+   for j in 0..2
+    print c.minMax(t).table[i][j]
+    end
+    print "\n"
+  end
 end
 
   
