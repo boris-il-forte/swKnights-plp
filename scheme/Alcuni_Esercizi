@@ -1,0 +1,64 @@
+#lang racket
+
+;; Exercises on Scheme macros
+;; MPradella, MMXII
+
+;; 1) Define a macro "for", which works like the standard procedure for-each but
+;; with a more conventional syntax. 
+;; E.g. (for x in '(1 2 3) (display x)(newline)) 
+(define-syntax for
+  (syntax-rules (in)
+    ((_ var in list func ...)
+     (for-each (lambda (var)
+                 func ...)
+                 list))))
+
+;; 2) Define a procedure for computing the "Cartesian product" of two lists: 
+;; e.g.
+;; (cartesian-product '(a b) '(1 2 3)) 
+;; returns 
+;; ((a 1) (a 2) (a 3) (b 1) (b 2) (b 3))
+(define (listify x)
+  (if (list? x)
+      x
+      (list x)))
+
+(define (cartesian-product list1 list2)
+  (let ((result '()))
+    (for-each (lambda (elem1)
+                (for-each (lambda (elem2)
+                            (set! result 
+                                  (append result 
+                                          (list (append 
+                                                 (listify elem1) 
+                                                 (listify elem2))))))
+                          list2))
+              list1)
+    result))
+  
+;; 3) Define a macro for "list comprehesions", with syntax 
+;; (list/co <outexpr> <condexpr> for <list1> ...)
+;; where <outexpr> and <condexpr> are *optional* procedures with one argument.
+;; These procedures expect a list containing one argument taken from each list
+;; in <list1> ...
+;; <outexpr> computes the output value to be put in the comprehension, while
+;; <condexpr> is a predicate used to filter out unwanted values.
+;;
+;; (Hint: use cartesian-product)
+;;
+;; Examples:
+;; (list/co (lambda (x) 
+;;            (cons (car x) (cadr x))) 
+;;          for '(1 2 3) '(a b c))
+;; returns 
+;; ((1 . a) (1 . b) (1 . c) (2 . a) (2 . b) (2 . c) (3 . a)
+;;   (3 . b) (3 . c)) 
+;; 
+;; (list/co (lambda (x) 
+;;            (* (car x) (cadr x))) 
+;;          (lambda (x) 
+;;            (> (car x) (cadr x))) 
+;;          for '(1 2 3) '(-2 4))
+;; returns
+;; (-2 -4 -6)
+    

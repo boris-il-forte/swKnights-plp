@@ -30,10 +30,11 @@ module Controller
       value = []
       
       for child in node.getChild(@player) ##max è il primo che gioca
+	
 	utility = min_value(child)
-	puts utility
-	hash[utility] = child
-	value << utility
+	
+ 	hash[utility] = child
+ 	value << utility
       end
       
       return hash[max_vector(value)]
@@ -55,7 +56,6 @@ module Controller
     
     
     def max_value(state)
-      puts "ciao"
       return utilityFunction(state) if terminalState(state)
       
       u = -@player
@@ -304,12 +304,13 @@ module Controller
    t = Model::TrisMatrixState.new()
    c = Reasoner.instance
   
-  for i in 0..2
-    for j in 0..2
-     print c.minMax(t).table[i][j]
-     end
-     print "\n"
-  end
+   for i in 0..2
+     for j in 0..2
+      print c.minMax(t).table[i][j]
+      end
+      print "\n"
+   end
+   c.minMax(t)
 end
 
   
