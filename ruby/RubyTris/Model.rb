@@ -1,10 +1,11 @@
 module Model
   
-  
   class TrisMatrixState
     
     attr_reader :table
-    
+   
+    @@childcount = 0
+
     #può valere:1, 0 o -1 a seconda di vittoria, pareggio o sconfitta
     attr_accessor :minMaxGain
     
@@ -16,6 +17,17 @@ module Model
       @minMaxGain = 0
     end
     
+	def to_s()
+			s = ""
+			@table.each do |row|
+				row.each do |cell|
+				   s = s << cell.to_s << " "
+				end
+				s = s << "\n"
+			end
+			s
+	end
+
     #espande lo stato corrente
     def getChild(player)
       copyState = self.copy
@@ -25,6 +37,7 @@ module Model
 	for j in 0..2
 	  begin 
 	   copyState.insert(i, j, player)
+	   @@childcount += 1
 	   children << copyState
 	   copyState = self.copy
 	  rescue InvalidMove => exception

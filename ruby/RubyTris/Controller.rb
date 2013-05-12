@@ -28,13 +28,14 @@ module Controller
     def minMax(node)
       hash = { }
       value = []
-      
       for child in node.getChild(@player) ##max è il primo che gioca
+
 	
 	utility = min_value(child)
 	
  	hash[utility] = child
  	value << utility
+
       end
       
       return hash[max_vector(value)]
@@ -43,35 +44,33 @@ module Controller
     end
     
     def max_vector(vector)
-     
       max = vector[0]
-      for i in 0..vector.length-1
-	if vector[i] > max
-	  max = vector[i]
-	end
-      end
-      return max
-      
+      vector.each { |x|
+			  if x > max
+					  max = x
+			  end
+	  }
+	  max
     end
     
     
     def max_value(state)
       return utilityFunction(state) if terminalState(state)
-      
+
+
       u = -@player
       for child in state.getChild(@player)
-	u = max(u, min_value(child))
+	      u = max(u, min_value(child))
       end
       return u
     end
     
     def min_value(state)
-    
       return utilityFunction(state) if terminalState(state)
       
       u = @player
       for child in state.getChild(-@player)
-	u = min(u, max_value(child))
+	      u = min(u, max_value(child))
       end
       return u
       
@@ -80,153 +79,83 @@ module Controller
     #funzione euristica che valuta la tipologia di uno stato: parità, vittoria, sconfitta
     #ritorna 1 in caso di vittoria, 0 pareggio, -1 altrimenti
     def utilityFunction(state)
-      
-      if lost(state)
-	-1
-      elsif win(state)
-	1
-      else #draw
-	0
-      end
-	
+			return -1 if lost(state)
+			return 1 if win(state)
+			0
     end
 
     def terminalState(state)
-      win(state) || lost(state) || fullState(state)
+	  win(state) or lost(state) or fullState(state)
     end
     
     #controlla se la matrice è piena
     def fullState(state)
-      
-      for i in 0..2
-	for j in 0..2
-	  if state.table[i][j] == 0
-	    return false
-	  end
-	end
-      end
-      true
+      state.table.each { |row|
+			  row.each { |x|
+					 return false if x == 0
+			  }
+	  }
+	  true
     end
-    
     
     #uno stato è di vittoria nel caso ci sia almeno una sequenza di 3 uni di fila nella matrice
     def win(state)
-      
+			playerWon(state, +1)
+	end
+
+	def lost(state)
+			playerWon(state, -1)
+	end
+
+	def playerWon(state, player)
       #controllo le colonne
       for j in 0..2
-	count = 0
-	for i in 0..2
-	  if state.table[i][j] == 1 #controlla qua che da errore!
-	    count = count + 1
-	  end
-	end
-	return true if count == 3 #abbiamo vinto!
+	     count = 0
+	     for i in 0..2
+	        if state.table[i][j] == player #controlla qua che da errore!
+	           count = count + 1
+	        end
+	     return true if count == 3 #abbiamo vinto!
+	     end
       end
-      
-      
-      
       
       #controllo le righe
       for i in 0..2
-	count = 0
-	for j in 0..2
-	  if state.table[i][j] == 1
-	    count = count + 1
-	  end
-	end
-	return true if count == 3 #abbiamo vinto!
+	     count = 0
+	     for j in 0..2
+	        if state.table[i][j] == player
+	        count = count + 1
+	        end
+	     return true if count == 3 #abbiamo vinto!
+	     end
       end
      
-      
-      
-      
       count = 0
       #controllo le diagonali
       for i in 0..2
-	if state.table[i][i] == 1
-	  count = count + 1
-	end
+         if state.table[i][i] == player
+	        count = count + 1
+	     end
       end
-      
       return true if count == 3 #abbiamo vinto!
       
       count = 0
       for i in 2..0
-	if state.table[i][i] == 1
-	  count = count + 1
-	end
+         if state.table[i][2-i] == player
+	        count = count + 1
+	     end
       end
-      
       return true if count == 3 #abbiamo vinto!
       
       false
     end
     
-    #uno stato è di sconfitta nel caso ci sia almeno una sequenza di tre meno-uno di fila nella matrice
-    def lost(state)
-    
-     
-      #controllo le colonne
-      for j in 0..2
-	count = 0
-	for i in 0..2
-	  if state.table[i][j] == -1
-	    count = count + 1
-	  end
-	end
-	return true if count == 3 #abbiamo vinto!
-      end
-      
-      
-      
-      count = 0
-      #controllo le righe
-      for i in 0..2
-	count = 0
-	for j in 0..2
-	  if state.table[i][j] == -1
-	    count = count + 1
-	  end
-	end
-	return true if count == 3 #abbiamo vinto!
-      end
-      
-      
-      
-      count = 0
-      #controllo le diagonali
-      for i in 0..2
-	if state.table[i][i] == -1
-	  count = count + 1
-	end
-      end
-      
-      count = 0
-      for i in 2..0
-	if state.table[i][i] == -1
-	  count = count + 1
-	end
-      end
-      
-      return true if count == 3 #abbiamo vinto!
-      
-      false
-    end
-     
     def min(x, y)
-      if x < y
-	  x
-      else 
-	y
-      end
+      x < y ? x : y
     end
       
     def max(x, y)
-      if x > y
-	  x
-      else 
-	y
-      end
+      x > y ? x : y
     end
     
     private :min, :max, :fullState, :utilityFunction, :max_value, :min_value, :max_vector
