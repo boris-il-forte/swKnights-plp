@@ -1,0 +1,52 @@
+#lang racket
+
+(define (adder x)
+  (lambda (y)
+    (+ x y)))
+    
+
+(define (factorial n)
+  (if (= n 0)
+      1
+      (* n (factorial (- n 1)))))
+
+(define (fact x)
+  (define (fact-tail x accum)
+    (if (= x 0)
+        accum
+        (fact-tail (- x 1) (* x accum))))
+  (fact-tail x 1))
+
+(define-syntax while
+  (syntax-rules ()
+    ((_ condition body ...)
+     (let loop()
+       (when condition
+           (begin
+             body ...
+             (loop)))))))
+
+(define (rev-cont lst)
+  (define (rev-cont-aux lst k)
+    (if (null? lst)
+        (k '())
+        (let ((continuation
+               (lambda (x)
+                 (k (append x
+                            (list (car lst)))))))
+          (rev-cont-aux (cdr lst)
+                        continuation))))
+  (rev-cont-aux lst (lambda (x) x)))
+
+(define saved-cont #f)
+
+(define (test-cont)
+  (let ((x 0))
+    (call/cc
+     (lambda (k)
+       (set! saved-cont k)))
+    (set! x (+ x 1))
+    (display x)
+    (newline)))
+        
+        
