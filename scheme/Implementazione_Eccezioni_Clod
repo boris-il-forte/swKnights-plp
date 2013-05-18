@@ -1,8 +1,13 @@
 #lang racket
 
 ;################################
-;# Gestione eccezioni in scheme #
+;# GESTIONE ECCEZIONI IN SCHEME #
 ;################################
+
+;##########################################################################################################
+;# Le eccezioni sono in questa particolare implementazione viste come stringhe                            #
+;# dove il nome della stringa rappresenta il tipo di eccezione (Volendo si potevano usare anche i simboli)#
+;##########################################################################################################
 
 ;pila contenente i gestori delle eccezioni
 (define *handlers* (list))
@@ -40,16 +45,13 @@
 ;non viene prelevato l'handler corrispondente, e le due pile risultaranno sfasate di uno fino a quando nel throw corrispondente
 ;non viene poppato ed eseguito
 (define (same-exception? ex)
-  ;DEBUG;(display "sono in same-exc: ") (display ex) (newline)
-  (let ((top (pop-exception)))
-    ;DEBUG;(display "sono e: ") (display e) (newline)
     (if (not (more-exceptions?))
         #F
-        (if (string=? ex top)
+        (if (string=? ex (pop-exception))
             #T ; nel caso si ritorni true, non viene poppato l'handler che verrà successivamente preso e usato nel catch
             (begin
               (pop-handler)
-              (same-exception? ex)))))) ;pop handler in quanto le due pile (handlers & exceptions) devono rimanere allineate
+              (same-exception? ex))))) ;pop handler in quanto le due pile (handlers & exceptions) devono rimanere allineate
   
 ;_______________________________________________________________
 
@@ -59,32 +61,46 @@
 (define (throw e)
   (if (same-exception? e)
       ((pop-handler))   ;alla prima occorrenza della stessa eccezione trovata ne viene eseguito l'handler
-      (error e))) ;se non ci sono eccezzioni dello stesso tipo in pila si avrà un errore
+      (error (string-append "non hai gestito l'" e)))) ;se non ci sono eccezzioni dello stesso tipo in pila si avrà un errore
 
-;Definizione del catch
+;Il catch è molto simile a quello visto a lezione, l'unica differenza sta nel fatto che ora dobbiamo gestire anche la pila delle
+;eccezioni: ogni volta che si fa un push di un handler lo si fa anche per l'eccezione, e lo stesso vale per i pop (ovvero gli scarti)
 (define-syntax catch
   (syntax-rules ()
     ((_ exception handler exp1 ...)
-     (call/cc (lambda (exit)
+     (call/cc (lambda (exit) ;preinstallo l'handler e la rispettiva eccezione che gestisce
                 (push-exception exception)
                 (push-handler (lambda ()
                                 (exit handler)))
                 (let ((res
                        (begin exp1 ...)))
-                  (pop-handler)
+                  (pop-handler) ;scarto handler e eccezione che non servono piu'
                   (pop-exception)
                   res))))))
 
-;Esempio di utilizzo
+;Come intuitivo il catch funziona nel modo seguente: come argomenti prende rispettivamente l'eccezione da gestire (sottoforma di
+;stringa), il gestore dell'eccezione il quale è una sequenza di istruzioni o una procedura, e una serie di istruzioni che di fatto
+;rappresenterebbero il blocco try in java.
+;Per chiarezza:
+; (catch "eccezione" (begin ...handler...) (exp1) (exp1) ...)
+;qualora venisse lanciata un'eccezione verrebbe attivato il rispettivo handler in pila o in alternativa verrebbe lanciato un errore
+;la gestione è componibile, ovvero un'eccezione lanciata in un catch piu' interno puo' essere gestita dal'handler posto da un catch
+;piu' esterno ad esso.
+
+;Esempio di utilizzo: catch nidificati
 (define (foo x)
   (display x) (newline)
   (throw "eccezione_1"))
 
-(catch "eccezione_1" (display "presa eccezione_1") 
-  (display "prima di foo\n")
-  (foo "CIAO!!\n")
-  (display "dopo foo") ;non raggiungibile
-  )
+(catch "eccezione_1" (display "presa eccezione_1\n") 
+  
+  
+  (catch "eccezione_1" (display "presa eccezione_1 da interno\n")
+    (display "prima di foo\n")
+    (foo "CIAO!!\n"))
+  (foo "CIAO_2\n")
+  (display "dopo foo")) ;non raggiungibile
+  
            
   
   
