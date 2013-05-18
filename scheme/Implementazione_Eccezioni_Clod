@@ -21,8 +21,8 @@
     h))
 
 ;una push per le eccezioni
-(define (push-exception e)
-  (set! *exceptions* (cons e *handlers*)))
+(define (push-exception ex)
+  (set! *exceptions* (cons ex *exceptions*)))
 
 ;una pop per le eccezioni
 (define (pop-exception)
@@ -40,13 +40,16 @@
 ;non viene prelevato l'handler corrispondente, e le due pile risultaranno sfasate di uno fino a quando nel throw corrispondente
 ;non viene poppato ed eseguito
 (define (same-exception? ex)
-  (if (not (more-exceptions?))
-      #F
-      (if (string=? ex (pop-exception))
-          #T ; nel caso si ritorni true, non viene poppato l'handler che verrà successivamente preso e usato nel catch
-          (begin
-            (pop-handler)
-            (same-exception? ex))))) ;pop handler in quanto le due pile (handlers & exceptions) devono rimanere allineate
+  ;DEBUG;(display "sono in same-exc: ") (display ex) (newline)
+  (let ((top (pop-exception)))
+    ;DEBUG;(display "sono e: ") (display e) (newline)
+    (if (not (more-exceptions?))
+        #F
+        (if (string=? ex top)
+            #T ; nel caso si ritorni true, non viene poppato l'handler che verrà successivamente preso e usato nel catch
+            (begin
+              (pop-handler)
+              (same-exception? ex)))))) ;pop handler in quanto le due pile (handlers & exceptions) devono rimanere allineate
   
 ;_______________________________________________________________
 
@@ -73,16 +76,21 @@
                   res))))))
 
 ;Esempio di utilizzo
-(define (foo str)
-  (display str)
-  (throw "eccezione_2"))
+(define (foo x)
+  (display x) (newline)
+  (throw "eccezione_1"))
 
-(catch "eccezione_2"
-  (begin
-    (display "Ho catchato eccezione_2") #f)
-  (catch "eccezione_1"
-    (begin (display "Ho catchato eccezione_1") #f)
-    (foo "HI\n")))
+(catch "eccezione_1" (display "presa eccezione_1") 
+  (display "prima di foo\n")
+  (foo "CIAO!!\n")
+  (display "dopo foo") ;non raggiungibile
+  )
+           
+  
+  
+  
+  
+    
   
   
   
