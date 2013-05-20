@@ -1,0 +1,71 @@
+#lang racket
+;Rivisitazione delle continuazioni con esempi (per me esercizietti banali)
+
+;simulazione break con continuazione: in questo esempio banale il break si ha se nella lista compare un -1
+(define k 0)
+
+(define (break-simulation list)
+  (call/cc
+   (lambda (break)
+     (for-each (lambda (x)
+                 (begin
+                   (display x) (display " ")
+                   (when (= x -1 )
+                     (set! k (lambda()
+                               (break))))))
+               list)))
+  (+ 10 10)
+  )
+ 
+
+;;Throw catch visto in aula
+(define *handlers* (list))
+
+(define (push-handler proc)
+  (set! *handlers* (cons proc *handlers*)))
+
+(define (pop-handler)
+  (let ((h (car *handlers*)))
+    (set! *handlers* (cdr *handlers*))
+    h))
+
+(define (more-handlers?) (pair? *handlers*))
+
+(define (throw . x)
+  (if (more-handlers?)
+      ((pop-handler))
+      (apply error x)))
+
+(define-syntax catch
+  (syntax-rules ()
+    ((_ handler exp1 ...)
+     (call/cc (lambda (exit)
+                (push-handler (lambda ()
+                                (exit handler)))
+                (let ((res
+                       (begin exp1 ...)))
+                  (pop-handler)
+                  res))))))
+
+(define (foo x)
+  (display x) (newline)
+  (throw "hello"))
+
+(catch (begin
+         (display "I caught a throw.\n")
+         #f)
+  (display "before foo ")
+  (newline)
+  (foo "HI!")
+  (display "after foo"))
+
+
+                             
+  
+        
+    
+    
+    
+  
+   
+  
