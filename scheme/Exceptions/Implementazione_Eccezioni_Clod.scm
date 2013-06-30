@@ -101,16 +101,8 @@
   (foo "CIAO_2\n")
   (display "dopo foo")) ;non raggiungibile
   
-           
-  
-  
-  
-  
-    
-  
-  
-  
-  
-  
-  
 
+(catch "e1" (display "e1")
+	   (catch "e2" (display "e2")
+			  (catch "e1" (throw "e1")
+					 (throw "e1"))))
