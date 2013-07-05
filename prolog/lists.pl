@@ -54,11 +54,24 @@ set([H|List], [H|Set]) :-
 
 % P6.3) flatten a list (using append/3)
 % how to do it without append/3???
-flatten([], []) :- !.
-flatten([List|T], Out) :- !,
-		flatten(List, Flat),
-		flatten(T, Seq),
-		append(Flat, Seq, Out).
-flatten(Atom, [Atom]).
 
+flatten(List, Out) :- flatten(List, [], Out).
 
+flatten([], Acc, Acc) :- !.
+flatten(Atom, Acc, [Atom|Acc]) :- 
+		atomic(Atom).
+flatten([Head|Tail], Acc, Out) :- 
+		flatten(Head, X, Out),
+		flatten(Tail, Acc, X).
+
+% 5.3) addone/2 add 1 to each element of the list
+addone([], []) :- !.
+addone([H|List], [X|Out]) :- X is H + 1, addone(List, Out).
+
+% P5.2) scalar mult
+scalarMult(_, [], []) :- !.
+scalarMult(N, [Head|Tail], [X|Out]) :- X is N * Head, scalarMult(N, Tail, Out).
+
+% P5.3) dot product: dot([2,5,6], [3,4,1], Result) yield Result = 32
+dot([], [], 0) :- !.
+dot([H1|T1], [H2|T2], R) :- dot(T1, T2, X), R is X + H1*H2.
