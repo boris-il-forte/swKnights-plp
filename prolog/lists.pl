@@ -1,4 +1,6 @@
-%Exercises on lists - text from the "Learn Prolog Now" book.
+% Prolog - Some exercises on lists
+% Texts from the "Learn Prolog Now" book
+% Marcello Pogliani <marcello.pogliani@gmail.com>
 
 %E1. append/3: append two lists
 
@@ -41,8 +43,9 @@ swapfrec(X, Y, [H1|T1], [H2|T2], A1, A2) :-
 		H1 = H2,
 		swapfrec(X, Y, T1, T2, [H1 | A1], [H2 | A2]).
 
-% P6.1) member using append/3 (argh! complexity!)
-mymember(List, X) :- append(_,[X|_],List). 
+% P6.1) member using append/3
+mymember(List, X) :- 
+		append(_,[X|_],List). 
 
 % P6.2) remove duplicates from a list (what a strange order)
 set([], []) :- !.
@@ -53,7 +56,6 @@ set([H|List], [H|Set]) :-
 		set(List, Set).
 
 % P6.3) flatten a list (using append/3)
-% how to do it without append/3???
 
 flatten(List, Out) :- flatten(List, [], Out).
 
@@ -66,12 +68,17 @@ flatten([Head|Tail], Acc, Out) :-
 
 % 5.3) addone/2 add 1 to each element of the list
 addone([], []) :- !.
-addone([H|List], [X|Out]) :- X is H + 1, addone(List, Out).
+addone([H|List], [X|Out]) :- 
+		X is H + 1, addone(List, Out).
 
 % P5.2) scalar mult
 scalarMult(_, [], []) :- !.
-scalarMult(N, [Head|Tail], [X|Out]) :- X is N * Head, scalarMult(N, Tail, Out).
+scalarMult(N, [Head|Tail], [X|Out]) :- 
+		X is N * Head, 
+		scalarMult(N, Tail, Out).
 
 % P5.3) dot product: dot([2,5,6], [3,4,1], Result) yield Result = 32
 dot([], [], 0) :- !.
-dot([H1|T1], [H2|T2], R) :- dot(T1, T2, X), R is X + H1*H2.
+dot([H1|T1], [H2|T2], R) :- 
+		dot(T1, T2, X), R is X + H1*H2.
+
