@@ -13,6 +13,7 @@ gradient(X, [T|V], [DXDT|R]) :- !, derive(X, T, 1,DXDT), gradient(X, V, R).
 d(X+Y, T, DX+DY) :- !, d(X, T, DX), d(Y, T, DY).
 d(X-Y, T, DY-DX) :- !, d(X, T, DX), d(Y, T, DY).
 d(X*Y, T, DX*Y+X*DY) :- !, d(X, T, DX), d(Y, T, DY).
+d(X/Y, T, (DX-DY)/Y^2) :- !, d(X, T, DX), d(Y, T, DY).
 d(X^N, T, N*X^K*DX) :- !, integer(N), K is N-1, d(X, T, DX).
 d(-X, T, -DX) :- !,  d(X, T, DX).
 d(X, X, 1) :- !.
@@ -20,7 +21,7 @@ d(C, _, 0) :- atomic(C), !.
 
 % built-in functions
 d(sin(T), T, cos(T)) :- !.
-d(cos(T), T, -cos(T)) :- !.
+d(cos(T), T, -sin(T)) :- !.
 d(tan(T), T, 1/(cos(T))^2) :- !.
 d(log(T), T, 1/T) :- !.
 d(exp(T), T, exp(T)) :- !.

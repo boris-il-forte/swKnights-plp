@@ -12,6 +12,7 @@ simplify(X, Y) :- term(X, 0, R, S), !, algebricSum(S, R, Y).
 % atoms and matematical functions
 atom(X, X) :- integer(X), !.
 atom(X, X) :- atomic(X), !.
+atom(-X, Y) :- Y = -X, !. 
 
 atom(sin(X), sin(X)) :- !.
 atom(cos(X), cos(X)) :- !.
@@ -39,6 +40,7 @@ factor(X, N, 1, P) :- atom(X,Y), integer(Y), !, P is Y*N .
 factor(X, N, Y, N) :- atom(X,Y), !.
 
 %% simplify terms
+term(X+(-Y), N, Z, S) :- term(X-Y, N, Z, S), !.
 term(X+Y, N, Z, S) :- term(X, N, A1, R), term(Y, R, A2, S), !, algebricSum(A1, A2, Z).
 term(X-Y, N, Z, S) :- term(X, N, A1, R1), term(Y, 0, A2, R2), !, algebricSub(A1, A2, Z), S is R1-R2.
 term(X, N, Y, N) :- factor(X, 1, R, P), !, algebricProd(P, R, Y).
