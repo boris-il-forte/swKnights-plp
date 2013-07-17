@@ -1,4 +1,6 @@
-%% Simplifier
+% Expression Simplifier
+% Inspired by Pradella's Prolog derivator
+% Davide Tateo <boris.ilpossente@hotmail.it>
 
 % simplify main routine
 simplify(_^0, 1) :- !.
