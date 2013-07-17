@@ -12,6 +12,7 @@ simplify(X, Y) :- term(X, 0, R, S), !, algebricSum(S, R, Y).
 % atoms and matematical functions
 atom(X, X) :- integer(X), !.
 atom(X, X) :- atomic(X), !.
+
 atom(sin(X), sin(X)) :- !.
 atom(cos(X), cos(X)) :- !.
 atom(tan(X), tan(X)) :- !.
@@ -27,9 +28,6 @@ atom(X^1, X) :- !.
 atom(X^Y, Z) :- integer(X), integer(Y), !, Z is X^Y.
 atom(X^Y, X^Y) :- !.
 
-% nested parenthesis
-atom((X), Y) :- simplify(X, Y), atomic(Y), !.
-atom((X), (Y)) :- simplify(X, Y), !.
 
 %% simplify factors
 factor(X, N, 1, P) :- atom(X,Y), integer(Y), !, P is Y*N .
