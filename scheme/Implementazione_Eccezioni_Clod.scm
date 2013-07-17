@@ -93,13 +93,18 @@
   (throw "eccezione_1"))
 
 (catch "eccezione_1" (display "presa eccezione_1\n") 
-  
-  
   (catch "eccezione_1" (display "presa eccezione_1 da interno\n")
     (display "prima di foo\n")
     (foo "CIAO!!\n"))
   (foo "CIAO_2\n")
   (display "dopo foo")) ;non raggiungibile
+
+;Esempio Componibità
+(catch "eccezione_1" (display "presa eccezione_1\n") 
+  (catch "eccezione_2" (display "presa eccezione_2 da interno\n")
+    (display "prima di foo\n")
+    (foo "CIAO!!\n"))
+  (display "dopo foo"))
   
            
   
