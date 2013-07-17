@@ -28,17 +28,20 @@ atom(X^1, X) :- !.
 atom(X^Y, Z) :- integer(X), integer(Y), !, Z is X^Y.
 atom(X^Y, X^Y) :- !.
 
+% nested expression
+atom(X, Y) :- simplify(X, Y), !.
+
 
 %% simplify factors
+factor(X*Y, N, Z, R) :- factor(X, N, A1, P), factor(Y, P, A2, R), !, algebricProd(A1, A2, Z).
+factor(X/Y, N, Z, R) :- factor(Y, 1, A2, Q), P is N/Q, factor(X, P, A1, R), !, algebricDiv(A1, A2, Z).
 factor(X, N, 1, P) :- atom(X,Y), integer(Y), !, P is Y*N .
 factor(X, N, Y, N) :- atom(X,Y), !.
-factor(X*Y, N, Z, R) :- factor(X, N, A1, P), factor(Y, P, A2, R), !, algebricProd(A1, A2, Z).
-factor(X/Y, N, Z, R) :- factor(Y, 1, A2, Q), P is N/Q, factor(X, P, A1, R), !, algebricDiv(A1, A2, Z). 
 
 %% simplify terms
-term(X, N, Y, N) :- factor(X, 1, R, P), !, algebricProd(P, R, Y).
 term(X+Y, N, Z, S) :- term(X, N, A1, R), term(Y, R, A2, S), !, algebricSum(A1, A2, Z).
 term(X-Y, N, Z, S) :- term(X, N, A1, R1), term(Y, 0, A2, R2), !, algebricSub(A1, A2, Z), S is R1-R2.
+term(X, N, Y, N) :- factor(X, 1, R, P), !, algebricProd(P, R, Y).
 
 
 %% apply operations
