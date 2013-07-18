@@ -31,9 +31,10 @@ breadthFirst (Graph (h:_)) = breadthFirst' [h] [] where
 			getNewSuccessors node blackList = [ x | x <- successors(node) ,  not(x `elem` blackList)]
 
 test = let 
-{	test = Graph [x,y,z];
+{	test = Graph [x,y,z,w];
 	x = Node "a" 1 [x, y, z];
 	y = Node "b" 2 [y, z];
-	z = Node "c" 3 [];
+	z = Node "c" 3 [w];
+	w = Node "d" 4 [];
 } in test
 
