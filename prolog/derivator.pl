@@ -2,6 +2,9 @@
 % extended prolog version of Pradella's Prolog derivator 
 % Davide Tateo <boris.ilpossente@hotmail.it>
 
+% import simplifier
+:- [simplifier].
+
 % Derivator frontend
 derive(X, _, 0, Y) :- !, simplify(X, Y).
 derive(X, T, N, Y) :- integer(N), !, K is N-1, d(X, T, W), derive(W, T, K, Y).
