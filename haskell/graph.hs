@@ -25,16 +25,34 @@ breadthFirst (Graph (h:_)) = breadthFirst' [h] [] where
 		let
 		{
 			visited' = visited ++ [current];
-			sons = getNewSuccessors current visited';
+			sons = [x | x <- successors(current) ,  not(x `elem` visited')];
+			toVisit' = [x | x <- (toVisit ++ sons) , not(x `elem` visited')];
 		} 
-		in breadthFirst' (toVisit ++ sons) visited' where
-			getNewSuccessors node blackList = [ x | x <- successors(node) ,  not(x `elem` blackList)]
+		in breadthFirst' toVisit' visited'
 
+deepthFirst (Graph (h:_)) = deepthFirst' [h] [] where
+	deepthFirst' [] visited = visited
+	deepthFirst' (current:toVisit) visited 
+		| not(current `elem` visited) = 
+			let 
+			{
+				visited' = deepthFirst' (successors current) (visited ++ [current]);
+				toVisit' = [x | x <- toVisit, not(x `elem` visited')];
+			}
+			in deepthFirst' toVisit' visited'
+		| otherwise  = deepthFirst' toVisit visited
+
+visitGraph graph fvisit = let visited = fvisit graph in showNames visited where
+	showNames [n] = nodeName(n) ++ ";"
+	showNames (n:ns) = nodeName(n) ++ ", " ++ showNames(ns) 
+	
 test = let 
-{	test = Graph [x,y,z,w];
-	x = Node "a" 1 [x, y, z];
-	y = Node "b" 2 [y, z];
-	z = Node "c" 3 [w];
-	w = Node "d" 4 [];
+{	test = Graph [a,b,c,d,e,f];
+	a = Node "a" 1 [b, c];
+	b = Node "b" 2 [d, e];
+	c = Node "c" 3 [b, f];
+	d = Node "d" 4 [];
+	e = Node "e" 5 [];
+	f = Node "f" 6 [a];
 } in test
 
