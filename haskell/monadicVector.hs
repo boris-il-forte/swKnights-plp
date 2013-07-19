@@ -1,11 +1,13 @@
 module MonadicVector where
 
+-- Defining a proper type for the monad
 newtype MVector a b = MVector ((Int -> a) -> ((Int->a), b))
 
+-- defining show for the monad... shows the value, not the vector
 instance Show b => Show(MVector a b) where
 	show (MVector x) = let (t,s) = x t in show s
 
-
+-- The monad implementation: very similar to state monad...
 instance Monad (MVector vector) where
 	return x = let f t = (t,x)
 		   in MVector f
@@ -22,7 +24,7 @@ createVector f = MVector (\oldvector -> (emptyVector , ())) where
 -- initialize vector with a vector of zeros
 createZeroVector = createVector (\n -> 0)
 
--- initialize vector with a failing vector
+-- initialize vector with a failing vector not working...
 -- createFailingVector :: MVector a ()
 -- createFailingVector = createVector(\n -> let s ="the index" ++ (show n) ++ "is undefined" in s >>=  fail s)
 
@@ -39,7 +41,8 @@ putValue (new, i)
 		newvector oldvector n
 			| n == i = new
 			| otherwise = oldvector n
-		
+
+-- Test code
 main = 	do
 	{
 		createZeroVector;
