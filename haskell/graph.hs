@@ -45,6 +45,23 @@ deepthFirst (Graph (h:_)) = deepthFirst' [h] [] where
 visitGraph graph fvisit = let visited = fvisit graph in showNames visited where
 	showNames [n] = nodeName(n) ++ ";"
 	showNames (n:ns) = nodeName(n) ++ ", " ++ showNames(ns) 
+
+buildGraph x = let nodes = buildNodes x nodes in nodes
+
+buildNodes [] nodes = nodes
+buildNodes (n:ns) nodes = 
+	let 
+	{
+		result = newNode:nodes;
+		newNode = buildNode n result
+	}
+	in result
+
+
+buildNode  [name, dt, succNames]  nodes = Node name dt [ n | n <- nodes, nodeName(n) `elem` succNames ]
+
+
+
 	
 test = let 
 {	test = Graph [a,b,c,d,e,f];
