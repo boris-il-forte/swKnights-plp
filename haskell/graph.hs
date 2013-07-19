@@ -52,7 +52,8 @@ visitGraph graph fvisit = let visited = fvisit graph in showNames visited where
 
 -- a test graph
 test = let 
-{	test = Graph [a,b,c,d,e,f];
+{
+	test = Graph [a,b,c,d,e,f];
 	a = Node "a" 1 [b, c];
 	b = Node "b" 2 [d, e];
 	c = Node "c" 3 [b, f];
