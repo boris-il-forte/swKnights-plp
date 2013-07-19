@@ -1,11 +1,8 @@
 module Graph where
 
+-- Graph and Node tipes definitions
 data Graph a = Graph [Node a]
 data Node a = Node {nodeName::String, nodeData::a, successors::[Node a]}
-
-getNames [] = "∅;"
-getNames [x] = nodeName x ++ ";"
-getNames (x:xs) = nodeName x ++ ", " ++ getNames xs
 
 instance Eq a => Eq (Node a) where
 	a == b = nodeName a == nodeName b
@@ -18,7 +15,12 @@ instance Show a => Show (Graph a) where
 instance Show a => Show (Node a) where
 	show n = nodeName n ++ "(" ++ show(nodeData n) ++ "): " ++  (getNames $ successors n)
 	
+-- function to get the names from a list of Nodes
+getNames [] = "∅;"
+getNames [x] = nodeName x ++ ";"
+getNames (x:xs) = nodeName x ++ ", " ++ getNames xs
 
+-- Breadth First algorithm
 breadthFirst (Graph (h:_)) = breadthFirst' [h] [] where
 	breadthFirst' [] visited = visited
 	breadthFirst' (current:toVisit) visited  = 
@@ -30,6 +32,7 @@ breadthFirst (Graph (h:_)) = breadthFirst' [h] [] where
 		} 
 		in breadthFirst' toVisit' visited'
 
+-- Deepth first algorithm
 deepthFirst (Graph (h:_)) = deepthFirst' [h] [] where
 	deepthFirst' [] visited = visited
 	deepthFirst' (current:toVisit) visited 
@@ -42,27 +45,12 @@ deepthFirst (Graph (h:_)) = deepthFirst' [h] [] where
 			in deepthFirst' toVisit' visited'
 		| otherwise  = deepthFirst' toVisit visited
 
+-- Function to visit the graph with a generic
 visitGraph graph fvisit = let visited = fvisit graph in showNames visited where
 	showNames [n] = nodeName(n) ++ ";"
 	showNames (n:ns) = nodeName(n) ++ ", " ++ showNames(ns) 
 
-buildGraph x = let nodes = buildNodes x nodes in nodes
-
-buildNodes [] nodes = nodes
-buildNodes (n:ns) nodes = 
-	let 
-	{
-		result = newNode:nodes;
-		newNode = buildNode n result
-	}
-	in result
-
-
-buildNode  [name, dt, succNames]  nodes = Node name dt [ n | n <- nodes, nodeName(n) `elem` succNames ]
-
-
-
-	
+-- a test graph
 test = let 
 {	test = Graph [a,b,c,d,e,f];
 	a = Node "a" 1 [b, c];
