@@ -47,3 +47,18 @@ false = Boolean False
 formula = true :|: x:&:y :==>: z
 formula1 = (z :|: x) :&:y :==>: z
 
+-- terne pitagoriche
+
+terne = [(x, y, z) |  z <- [1 .. ], y <- [1 .. z], x <- [1 .. y], x^2 + y^2 == z^2] 
+
+-- trova tutti i numeri fino a che cond è valida
+
+findFirstThat cond = takeWhile cond [0..]
+
+
+testList a b = [h*k | (h,k) <- zip a b]
+testOutput l = foldl (+) 0 l
+-- operatore prodotto scalare
+infixl 5 ***
+(***) a b = foldl1 (+) [h*k | (h,k) <- zip a b]
+vmod a = sqrt $ a *** a 
