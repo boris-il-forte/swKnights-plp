@@ -56,9 +56,7 @@ terne = [(x, y, z) |  z <- [1 .. ], y <- [1 .. z], x <- [1 .. y], x^2 + y^2 == z
 findFirstThat cond = takeWhile cond [0..]
 
 
-testList a b = [h*k | (h,k) <- zip a b]
-testOutput l = foldl (+) 0 l
 -- operatore prodotto scalare
-infixl 5 ***
+infixl 8 ***
 (***) a b = foldl1 (+) [h*k | (h,k) <- zip a b]
 vmod a = sqrt $ a *** a 
