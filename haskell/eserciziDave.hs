@@ -18,7 +18,6 @@ lenghtArray' (_:xs) = let rest = (lenghtArray' xs) in seq rest (1+rest)
 
 --  well formed formulas
 
-
 infixl 5 :<==>:
 infixl 6 :==>:  
 infixl 7 :%: 
