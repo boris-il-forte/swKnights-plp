@@ -82,6 +82,7 @@
                ((get-cell) get-cell)
                (else (error "no such method")))
              args))))
+    
 
 ;Creiamo la rubrica che incapsula una lista di contatti
 (define (make-index-book)
